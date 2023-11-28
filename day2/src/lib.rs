@@ -6,16 +6,16 @@ pub struct Round {
     pub me: Hand,
 }
 impl Round {
-    pub fn score(&self) -> (u32,u32) {
+    pub fn score(&self) -> (u32, u32) {
         (self.opp.against(&self.me), self.me.against(&self.opp))
     }
 }
 
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 pub enum RoundResult {
     Win,
     Loss,
-    Draw
+    Draw,
 }
 impl TryFrom<&str> for RoundResult {
     type Error = anyhow::Error;
@@ -25,13 +25,13 @@ impl TryFrom<&str> for RoundResult {
             "X" => RoundResult::Loss,
             "Y" => RoundResult::Draw,
             "Z" => RoundResult::Win,
-            _ => anyhow::bail!("Could not parse round {value}")
+            _ => anyhow::bail!("Could not parse round {value}"),
         };
         Ok(res)
     }
 }
 
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 pub enum Hand {
     Rock,
     Paper,
@@ -48,7 +48,7 @@ impl Hand {
     // What hand should I play to achieve the desired result.
     // self is my opponent.
     pub fn to_achieve(&self, result: RoundResult) -> Hand {
-        match (self,result) {
+        match (self, result) {
             (Hand::Rock, RoundResult::Win) => Hand::Paper,
             (Hand::Rock, RoundResult::Loss) => Hand::Scissors,
             (Hand::Rock, RoundResult::Draw) => Hand::Rock,
@@ -62,10 +62,10 @@ impl Hand {
     }
     pub fn against(&self, other: &Hand) -> u32 {
         const WIN_SCORE: u32 = 6;
-        const DRAW_SCORE: u32 =  3;
+        const DRAW_SCORE: u32 = 3;
         const LOSS_SCORE: u32 = 0;
 
-        let winloss = match (self,other) {
+        let winloss = match (self, other) {
             (Hand::Rock, Hand::Rock) => DRAW_SCORE,
             (Hand::Rock, Hand::Paper) => LOSS_SCORE,
             (Hand::Rock, Hand::Scissors) => WIN_SCORE,
@@ -97,10 +97,10 @@ impl TryFrom<&str> for Hand {
     }
 }
 
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 pub struct Goal {
     pub opp: Hand,
-    pub result: RoundResult
+    pub result: RoundResult,
 }
 
 impl TryFrom<&str> for Goal {
@@ -112,10 +112,12 @@ impl TryFrom<&str> for Goal {
         let (opp, result) = (
             values
                 .next()
-                .ok_or_else(|| anyhow::anyhow!("No opp value"))?.try_into()?,
+                .ok_or_else(|| anyhow::anyhow!("No opp value"))?
+                .try_into()?,
             values
                 .next()
-                .ok_or_else(|| anyhow::anyhow!("No result value"))?.try_into()?,
+                .ok_or_else(|| anyhow::anyhow!("No result value"))?
+                .try_into()?,
         );
         Ok(Goal { opp, result })
     }
@@ -124,7 +126,7 @@ impl TryFrom<&str> for Goal {
 #[test]
 fn test_rounds() -> Result<()> {
     let sample = include_str!("../sample.txt");
-    let goals : Result<Vec<Goal>> = sample
+    let goals: Result<Vec<Goal>> = sample
         .lines()
         .into_iter()
         .map(|line| line.try_into())
@@ -133,23 +135,20 @@ fn test_rounds() -> Result<()> {
 
     let rounds = goals.into_iter().map(|goal| {
         let me = goal.opp.to_achieve(goal.result);
-        Round {
-            opp: goal.opp,
-            me
-        }
+        Round { opp: goal.opp, me }
     });
 
-    println!("rounds: {:?}",rounds.clone().collect::<Vec<_>>());
+    println!("rounds: {:?}", rounds.clone().collect::<Vec<_>>());
 
     let scores = rounds.into_iter().map(|r| r.score());
 
-    println!("{:?}",scores);
+    println!("{:?}", scores);
 
-    let totals = scores.fold((0,0), |(acc1,acc2),(value1,value2)| {
-        ((acc1 + value1),(acc2 + value2))
+    let totals = scores.fold((0, 0), |(acc1, acc2), (value1, value2)| {
+        ((acc1 + value1), (acc2 + value2))
     });
 
-    println!("{:?}",totals);
+    println!("{:?}", totals);
     assert!(false);
 
     Ok(())
