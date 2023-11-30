@@ -35,6 +35,17 @@ impl ElfPair {
                 .clone()
                 .all(|v| self.elf1.range.contains(&v))
     }
+    pub fn overlaps_at_all(&self) -> bool {
+        self.elf1
+            .range
+            .clone()
+            .any(|v| self.elf2.range.contains(&v))
+            || self
+                .elf2
+                .range
+                .clone()
+                .any(|v| self.elf1.range.contains(&v))
+    }
 }
 
 pub struct ElfRange {
@@ -86,7 +97,13 @@ fn part1(data: &str) -> Result<String> {
 
 #[allow(unused)]
 fn part2(data: &str) -> Result<String> {
-    Ok("NOT IMPLEMENTED".to_string())
+    let pairs: Result<Vec<ElfPair>> = data.lines().map(|l| l.try_into()).collect();
+    let pairs = pairs?;
+    Ok(pairs
+        .into_iter()
+        .filter(|p| p.overlaps_at_all())
+        .count()
+        .to_string())
 }
 
 #[cfg(test)]
@@ -123,9 +140,9 @@ fn test_part1() -> Result<()> {
 #[test]
 #[allow(unused)]
 fn test_part2() -> Result<()> {
-    let expected = "foobar".to_string();
+    let expected = "4".to_string();
     let got = part2(sample_data()?.as_str())?;
 
-    //assert_eq!(expected, got);
+    assert_eq!(expected, got);
     Ok(())
 }
