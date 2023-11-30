@@ -69,7 +69,7 @@ impl Monkey {
                 .ok_or_else(|| anyhow::anyhow!("Could not get operation"))?,
         )?;
 
-        let (test,divisor) = parse_test(
+        let (test, divisor) = parse_test(
             &lines
                 .next()
                 .ok_or_else(|| anyhow::anyhow!("COuld not get test line"))?,
@@ -129,7 +129,7 @@ fn test_monkey() -> Result<()> {
     Ok(())
 }
 
-pub fn parse_test(test: &str) -> Result<(Box<dyn Fn(ValueType) -> bool>,u64)> {
+pub fn parse_test(test: &str) -> Result<(Box<dyn Fn(ValueType) -> bool>, u64)> {
     let mut test = test.trim().split(" ");
 
     if test
@@ -163,7 +163,7 @@ pub fn parse_test(test: &str) -> Result<(Box<dyn Fn(ValueType) -> bool>,u64)> {
         v % divisor == Zero::zero()
     };
 
-    Ok((Box::new(op),divisor))
+    Ok((Box::new(op), divisor))
 }
 
 pub fn parse_if_true(value: &str) -> Result<usize> {
@@ -288,7 +288,7 @@ fn solver(data: &str, rounds: usize, worry: ValueType) -> Result<usize> {
     let monkeys: Vec<_> = monkeys.into_iter().map(|m| RefCell::new(m)).collect();
 
     // compute the multiple of all divisors
-    let value_modulus : ValueType = monkeys.iter().map(|m| m.borrow().divisor).product();
+    let value_modulus: ValueType = monkeys.iter().map(|m| m.borrow().divisor).product();
 
     for _round in 0..rounds {
         // We have to do index based array manipulation because of borrowing
