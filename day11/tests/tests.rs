@@ -4,7 +4,7 @@ use anyhow::Result;
 #[allow(unused)]
 fn test_part1() -> Result<()> {
     let expected = "foobar".to_string();
-    let got = aocday11::part1(aocday11::sample_data()?.as_str())?;
+    let got = aocday11::part1(aocday11::data::sample_data()?.as_str())?;
 
     //assert_eq!(expected,got);
     Ok(())
@@ -14,7 +14,7 @@ fn test_part1() -> Result<()> {
 #[allow(unused)]
 fn test_part2() -> Result<()> {
     let expected = "foobar".to_string();
-    let got = aocday11::part2(aocday11::sample_data()?.as_str())?;
+    let got = aocday11::part2(aocday11::data::sample_data()?.as_str())?;
 
     //assert_eq!(expected,got);
     Ok(())
