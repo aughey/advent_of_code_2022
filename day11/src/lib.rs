@@ -287,7 +287,7 @@ fn solver(data: &str, rounds: usize, worry: ValueType) -> Result<usize> {
     // turn monkeys into refcells
     let monkeys: Vec<_> = monkeys.into_iter().map(|m| RefCell::new(m)).collect();
 
-    // compute the multiple of all divisors
+    // compute the multiple of all divisors.  This will keep our values in check (to a point)
     let value_modulus: ValueType = monkeys.iter().map(|m| m.borrow().divisor).product();
 
     for _round in 0..rounds {
