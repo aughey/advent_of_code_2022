@@ -1,7 +1,10 @@
 use anyhow::Result;
 
 fn main() -> Result<()> {
-    println!("Part 1 = {}",aocday11::part1_main()?);
-    println!("Part 2 = {}",aocday11::part2_main()?);
+    let part1_ans = aocday11::part1(aocday11::part1_problem_data()?.as_str())?;
+    let part2_ans = aocday11::part2(aocday11::part2_problem_data()?.as_str())?;
+
+    println!("Part 1 = {part1_ans}");
+    println!("Part 2 = {part2_ans}");
     Ok(())
 }
